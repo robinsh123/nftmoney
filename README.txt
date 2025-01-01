@@ -1,30 +1,84 @@
-Dimension by HTML5 UP
-html5up.net | @ajlkn
-Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NFT Money Online</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            color: #333;
+        }
+        header {
+            background: #4caf50;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+        }
+        .container {
+            padding: 20px;
+        }
+        h1, h2 {
+            color: #4caf50;
+        }
+        p {
+            margin-bottom: 15px;
+        }
+        .cta {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .cta button {
+            background-color: #25d366;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .cta button:hover {
+            background-color: #1da851;
+        }
+        footer {
+            text-align: center;
+            padding: 10px;
+            background: #f4f4f4;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Welcome to NFT Money Online</h1>
+    </header>
 
+    <div class="container">
+        <h2>What Are NFTs?</h2>
+        <p>NFTs, or Non-Fungible Tokens, are unique digital assets stored on a blockchain. They represent ownership of digital items like art, music, and collectibles, and they have revolutionized the way we think about digital ownership.</p>
 
-This is Dimension, a fun little one-pager with modal-ized (is that a word?) "pages"
-and a cool depth effect (click on a menu item to see what I mean). Simple, fully
-responsive, and kitted out with all the usual pre-styled elements you'd expect.
-Hope you dig it :)
+        <h2>Earn Daily Returns with NFT Trading</h2>
+        <p>At NFT Money Online, we help you explore the lucrative world of NFT trading. With Treasure NFT, you can earn consistent daily returns of <strong>1.8% to 1.95%</strong> by buying and selling NFTs. This is your chance to grow your wealth in the booming NFT space.</p>
 
-Demo images* courtesy of Unsplash, a radtastic collection of CC0 (public domain) images
-you can use for pretty much whatever.
+        <h2>How It Works</h2>
+        <p>1. Sign up for an NFT trading account using our platform.<br>
+           2. Deposit funds and start trading NFTs.<br>
+           3. Enjoy daily returns directly to your account.<br>
+           4. Refer others and earn even more!</p>
 
-(* = not included)
+        <div class="cta">
+            <p><strong>Have questions? Ready to get started?</strong></p>
+            <button onclick="window.open('https://wa.me/9956913699', '_blank')">WhatsApp Now</button>
+        </div>
+    </div>
 
-AJ
-aj@lkn.io | @ajlkn
-
-
-Credits:
-
-	Demo Images:
-		Unsplash (unsplash.com)
-
-	Icons:
-		Font Awesome (fontawesome.io)
-
-	Other:
-		jQuery (jquery.com)
-		Responsive Tools (github.com/ajlkn/responsive-tools)
+    <footer>
+        <p>&copy; 2025 nftmoney.online | All rights reserved.</p>
+    </footer>
+</body>
+</html>
