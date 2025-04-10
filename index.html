@@ -18,11 +18,12 @@
             padding: 20px;
             text-align: center;
         }
-        nav {
+        .top-menu {
             background-color: #16213e;
             padding: 10px;
+            text-align: right;
         }
-        nav a {
+        .top-menu a {
             color: white;
             margin: 0 15px;
             text-decoration: none;
@@ -44,7 +45,7 @@
         }
         .nft-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr); /* Adjusted for 2 NFTs */
+            grid-template-columns: repeat(2, 1fr);
             gap: 20px;
         }
         .nft-card {
@@ -53,7 +54,7 @@
             text-align: center;
             background-color: #f9f9f9;
             border-radius: 5px;
-            min-height: 200px; /* Increased height for text art */
+            min-height: 200px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -110,18 +111,15 @@
         <h1>NFT Money</h1>
         <p>Trade Exclusive N.F.T.s and Earn Daily Profits!</p>
     </header>
-    <nav>
-        <a href="#home">Home</a>
-        <a href="#deposit" class="hidden" id="deposit-link">Deposit Funds</a>
-        <a href="#trade">Trade N.F.T.s</a>
-        <a href="#refer">Refer Friends</a>
-        <a href="#account">My Account</a>
-    </nav>
+    <div class="top-menu">
+        <a href="#login">Login</a>
+        <a href="#register">Register</a>
+    </div>
 
     <div class="container">
-        <!-- Account Creation Section -->
-        <div class="section" id="home">
-            <h2>Create Your Account</h2>
+        <!-- Register Section -->
+        <div class="section" id="register">
+            <h2>Register</h2>
             <div class="form-group">
                 <label for="username">Username</label>
                 <input type="text" id="username" placeholder="Enter username">
@@ -138,6 +136,33 @@
             <div id="account-message"></div>
         </div>
 
+        <!-- Login Section -->
+        <div class="section hidden" id="login">
+            <h2>Login</h2>
+            <div class="form-group">
+                <label for="login-username">Username</label>
+                <input type="text" id="login-username" placeholder="Enter username">
+            </div>
+            <div class="form-group">
+                <label for="login-password">Password</label>
+                <input type="password" id="login-password" placeholder="Enter password">
+            </div>
+            <button onclick="login()">Login</button>
+            <div id="login-message"></div>
+        </div>
+
+        <!-- Referral Section -->
+        <div class="section hidden" id="refer">
+            <h2>Refer Friends & Earn More</h2>
+            <p>Invite friends and get 5% of their daily profits as a bonus!</p>
+            <div class="form-group">
+                <label for="referral-link">Your Referral Link</label>
+                <input type="text" id="referral-link" readonly>
+            </div>
+            <button onclick="copyReferral()">Copy Link</button>
+            <button onclick="showDeposit()">Next: Deposit Funds</button>
+        </div>
+
         <!-- Deposit Funds Section -->
         <div class="section hidden" id="deposit">
             <h2>Deposit Funds</h2>
@@ -147,22 +172,12 @@
                 <input type="text" id="deposit-address" value="0x578204D806f2621ef5CAEf9a1D65Fd2e9382b333" readonly>
             </div>
             <button onclick="copyDepositAddress()">Copy Address</button>
+            <button onclick="simulateDeposit()">Simulate Deposit ($500)</button>
             <div id="deposit-message"></div>
         </div>
 
-        <!-- Referral Section -->
-        <div class="section" id="refer">
-            <h2>Refer Friends & Earn More</h2>
-            <p>Invite friends and get 5% of their daily profits as a bonus!</p>
-            <div class="form-group">
-                <label for="referral-link">Your Referral Link</label>
-                <input type="text" id="referral-link" value="https://nftmoney.com/ref/user123" readonly>
-            </div>
-            <button onclick="copyReferral()">Copy Link</button>
-        </div>
-
         <!-- NFT Trading Section -->
-        <div class="section" id="trade">
+        <div class="section hidden" id="trade">
             <h2>Trade Exclusive N.F.T.s</h2>
             <p>Daily profits between 5-25%. Trade now and watch your earnings grow!</p>
             <div class="nft-grid" id="nft-grid"></div>
@@ -171,7 +186,7 @@
         </div>
 
         <!-- Account Overview Section -->
-        <div class="section" id="account">
+        <div class="section hidden" id="account">
             <h2>My Account</h2>
             <p>Balance: $<span id="balance">0.00</span></p>
             <p>Today's Profit: <span id="daily-profit">0%</span></p>
@@ -184,6 +199,8 @@
     <script>
         let userBalance = 0;
         let isRegistered = false;
+        let isLoggedIn = false;
+        let currentUsername = "";
         let nfts = [
             { 
                 id: 1, 
@@ -210,6 +227,7 @@
         // Populate NFT grid with text art
         function loadNFTs() {
             const nftGrid = document.getElementById('nft-grid');
+            nftGrid.innerHTML = '';
             nfts.forEach(nft => {
                 nftGrid.innerHTML += `
                     <div class="nft-card">
@@ -227,15 +245,49 @@
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             if (username && email && password) {
-                document.getElementById('account-message').innerHTML = 
-                    '<div class="alert success">Account created successfully! You can now deposit funds.</div>';
+                currentUsername = username;
                 isRegistered = true;
-                document.getElementById('deposit').classList.remove('hidden');
-                document.getElementById('deposit-link').classList.remove('hidden');
+                document.getElementById('account-message').innerHTML = 
+                    '<div class="alert success">Account created successfully! Proceed to referral.</div>';
+                document.getElementById('register').classList.add('hidden');
+                document.getElementById('refer').classList.remove('hidden');
+                document.getElementById('referral-link').value = `https://nftmoney.com/ref/${username}`;
             } else {
                 document.getElementById('account-message').innerHTML = 
                     '<div class="alert warning">Please fill all fields.</div>';
             }
+        }
+
+        // Login (Simulated)
+        function login() {
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+            if (username && password && isRegistered) {
+                isLoggedIn = true;
+                currentUsername = username;
+                document.getElementById('login-message').innerHTML = 
+                    '<div class="alert success">Logged in successfully!</div>';
+                document.getElementById('login').classList.add('hidden');
+                document.getElementById('refer').classList.remove('hidden');
+                document.getElementById('referral-link').value = `https://nftmoney.com/ref/${username}`;
+            } else {
+                document.getElementById('login-message').innerHTML = 
+                    '<div class="alert warning">Invalid credentials or register first.</div>';
+            }
+        }
+
+        // Copy Referral Link
+        function copyReferral() {
+            const link = document.getElementById('referral-link');
+            link.select();
+            document.execCommand('copy');
+            alert('Referral link copied!');
+        }
+
+        // Show Deposit Section
+        function showDeposit() {
+            document.getElementById('refer').classList.add('hidden');
+            document.getElementById('deposit').classList.remove('hidden');
         }
 
         // Copy Deposit Address
@@ -247,19 +299,22 @@
                 '<div class="alert success">Deposit address copied!</div>';
         }
 
-        // Copy Referral Link
-        function copyReferral() {
-            const link = document.getElementById('referral-link');
-            link.select();
-            document.execCommand('copy');
-            alert('Referral link copied!');
+        // Simulate Deposit
+        function simulateDeposit() {
+            userBalance += 500; // Simulated $500 deposit
+            document.getElementById('deposit-message').innerHTML = 
+                '<div class="alert success">Successfully deposited $500! Proceed to trading.</div>';
+            document.getElementById('deposit').classList.add('hidden');
+            document.getElementById('trade').classList.remove('hidden');
+            updateBalance();
+            loadNFTs();
         }
 
         // Trade NFTs and Assign Random Profit
         function tradeNFTs() {
-            if (!isRegistered) {
+            if (!isRegistered || !isLoggedIn) {
                 document.getElementById('trade-message').innerHTML = 
-                    '<div class="alert warning">Please create an account first.</div>';
+                    '<div class="alert warning">Please register and log in first.</div>';
                 return;
             }
             if (userBalance < 100) {
@@ -273,6 +328,8 @@
             document.getElementById('daily-profit').textContent = `${profitPercent}%`;
             document.getElementById('trade-message').innerHTML = 
                 '<div class="alert success">Trade successful! Today\'s profit: ' + profitPercent + '%</div>';
+            document.getElementById('trade').classList.add('hidden');
+            document.getElementById('account').classList.remove('hidden');
             updateBalance();
         }
 
@@ -283,17 +340,14 @@
 
         // Withdrawal Request
         function requestWithdrawal() {
-            if (!isRegistered) {
+            if (!isRegistered || !isLoggedIn) {
                 document.getElementById('withdrawal-message').innerHTML = 
-                    '<div class="alert warning">Please create an account first.</div>';
+                    '<div class="alert warning">Please register and log in first.</div>';
                 return;
             }
             document.getElementById('withdrawal-message').innerHTML = 
                 '<div class="alert warning">Funds are locked for 30 days to ensure platform stability and user security. Please check back later.</div>';
         }
-
-        // Load NFTs on page load
-        window.onload = loadNFTs;
     </script>
 </body>
 </html>
