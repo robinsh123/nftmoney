@@ -48,15 +48,22 @@
             gap: 20px;
         }
         .nft-card {
-            border: 1px solid #ddd;
+            border: 1px dashed #666;
             padding: 10px;
             text-align: center;
             background-color: #f9f9f9;
             border-radius: 5px;
+            height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
-        .nft-card img {
-            max-width: 100%;
-            height: auto;
+        .nft-placeholder {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto;
+            border: 2px dotted #0f3460;
+            border-radius: 5px;
         }
         button {
             background-color: #0f3460;
@@ -95,16 +102,20 @@
             background-color: #fff3cd;
             color: #856404;
         }
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
     <header>
         <h1>NFT Money</h1>
-        <p>Trade Exclusive NFTs and Earn Daily Profits!</p>
+        <p>Trade Exclusive N.F.T.s and Earn Daily Profits!</p>
     </header>
     <nav>
         <a href="#home">Home</a>
-        <a href="#trade">Trade NFTs</a>
+        <a href="#deposit" class="hidden" id="deposit-link">Deposit Funds</a>
+        <a href="#trade">Trade N.F.T.s</a>
         <a href="#refer">Refer Friends</a>
         <a href="#account">My Account</a>
     </nav>
@@ -129,23 +140,35 @@
             <div id="account-message"></div>
         </div>
 
+        <!-- Deposit Funds Section -->
+        <div class="section hidden" id="deposit">
+            <h2>Deposit Funds</h2>
+            <p>To start trading, deposit USD using the BEP-20 network to the address below:</p>
+            <div class="form-group">
+                <label>USD - BEP 20</label>
+                <input type="text" id="deposit-address" value="0x578204D806f2621ef5CAEf9a1D65Fd2e9382b333" readonly>
+            </div>
+            <button onclick="copyDepositAddress()">Copy Address</button>
+            <div id="deposit-message"></div>
+        </div>
+
         <!-- Referral Section -->
         <div class="section" id="refer">
             <h2>Refer Friends & Earn More</h2>
             <p>Invite friends and get 5% of their daily profits as a bonus!</p>
             <div class="form-group">
                 <label for="referral-link">Your Referral Link</label>
-                <input type="text" id="referral-link" value="https://nftprofithub.com/ref/user123" readonly>
+                <input type="text" id="referral-link" value="https://nftmoney.com/ref/user123" readonly>
             </div>
             <button onclick="copyReferral()">Copy Link</button>
         </div>
 
         <!-- NFT Trading Section -->
         <div class="section" id="trade">
-            <h2>Trade Exclusive NFTs</h2>
+            <h2>Trade Exclusive N.F.T.s</h2>
             <p>Daily profits between 5-25%. Trade now and watch your earnings grow!</p>
             <div class="nft-grid" id="nft-grid"></div>
-            <button onclick="tradeNFTs()">Trade Selected NFTs</button>
+            <button onclick="tradeNFTs()">Trade Selected N.F.T.s</button>
             <div id="trade-message"></div>
         </div>
 
@@ -162,19 +185,42 @@
 
     <script>
         let userBalance = 0;
+        let isRegistered = false;
         let nfts = [
-            { id: 1, name: "Cosmic Cat", price: 100, img: "https://via.placeholder.com/150" },
-            { id: 2, name: "Pixel Punk", price: 150, img: "https://via.placeholder.com/150" },
-            // Add more NFTs up to 25 (simplified here for brevity)
+            { id: 1, name: "Cosmic.Cat", price: 100 },
+            { id: 2, name: "Pixel.Punk", price: 150 },
+            { id: 3, name: "Astro.Dog", price: 120 },
+            { id: 4, name: "Neon.Fox", price: 180 },
+            { id: 5, name: "Cyber.Bird", price: 90 },
+            { id: 6, name: "Lunar.Wolf", price: 200 },
+            { id: 7, name: "Solar.Bear", price: 130 },
+            { id: 8, name: "Glitch.Deer", price: 160 },
+            { id: 9, name: "Vapor.Rat", price: 110 },
+            { id: 10, name: "Echo.Tiger", price: 170 },
+            { id: 11, name: "Frost.Lion", price: 140 },
+            { id: 12, name: "Blaze.Hawk", price: 190 },
+            { id: 13, name: "Shadow.Panther", price: 210 },
+            { id: 14, name: "Nova.Rabbit", price: 95 },
+            { id: 15, name: "Quantum.Snake", price: 155 },
+            { id: 16, name: "Prism.Eagle", price: 175 },
+            { id: 17, name: "Dusk.Owl", price: 125 },
+            { id: 18, name: "Dawn.Crow", price: 145 },
+            { id: 19, name: "Flux.Monkey", price: 165 },
+            { id: 20, name: "Glow.Zebra", price: 185 },
+            { id: 21, name: "Holo.Horse", price: 205 },
+            { id: 22, name: "Mist.Cheetah", price: 115 },
+            { id: 23, name: "Pulse.Bat", price: 135 },
+            { id: 24, name: "Spark.Lynx", price: 195 },
+            { id: 25, name: "Void.Shark", price: 220 },
         ];
 
-        // Populate NFT grid
+        // Populate NFT grid with dotted placeholders
         function loadNFTs() {
             const nftGrid = document.getElementById('nft-grid');
             nfts.forEach(nft => {
                 nftGrid.innerHTML += `
                     <div class="nft-card">
-                        <img src="${nft.img}" alt="${nft.name}">
+                        <div class="nft-placeholder"></div>
                         <p>${nft.name}</p>
                         <p>$${nft.price}</p>
                     </div>
@@ -189,13 +235,23 @@
             const password = document.getElementById('password').value;
             if (username && email && password) {
                 document.getElementById('account-message').innerHTML = 
-                    '<div class="alert success">Account created successfully! Start trading now.</div>';
-                userBalance = 1000; // Simulated initial deposit
-                updateBalance();
+                    '<div class="alert success">Account created successfully! You can now deposit funds.</div>';
+                isRegistered = true;
+                document.getElementById('deposit').classList.remove('hidden');
+                document.getElementById('deposit-link').classList.remove('hidden');
             } else {
                 document.getElementById('account-message').innerHTML = 
                     '<div class="alert warning">Please fill all fields.</div>';
             }
+        }
+
+        // Copy Deposit Address
+        function copyDepositAddress() {
+            const address = document.getElementById('deposit-address');
+            address.select();
+            document.execCommand('copy');
+            document.getElementById('deposit-message').innerHTML = 
+                '<div class="alert success">Deposit address copied!</div>';
         }
 
         // Copy Referral Link
@@ -208,9 +264,14 @@
 
         // Trade NFTs and Assign Random Profit
         function tradeNFTs() {
+            if (!isRegistered) {
+                document.getElementById('trade-message').innerHTML = 
+                    '<div class="alert warning">Please create an account first.</div>';
+                return;
+            }
             if (userBalance < 100) {
                 document.getElementById('trade-message').innerHTML = 
-                    '<div class="alert warning">Insufficient balance to trade.</div>';
+                    '<div class="alert warning">Insufficient balance to trade. Please deposit funds.</div>';
                 return;
             }
             const profitPercent = Math.floor(Math.random() * (25 - 5 + 1)) + 5;
@@ -229,6 +290,11 @@
 
         // Withdrawal Request
         function requestWithdrawal() {
+            if (!isRegistered) {
+                document.getElementById('withdrawal-message').innerHTML = 
+                    '<div class="alert warning">Please create an account first.</div>';
+                return;
+            }
             document.getElementById('withdrawal-message').innerHTML = 
                 '<div class="alert warning">Funds are locked for 30 days to ensure platform stability and user security. Please check back later.</div>';
         }
