@@ -44,7 +44,7 @@
         }
         .nft-grid {
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
+            grid-template-columns: repeat(2, 1fr); /* Adjusted for 2 NFTs */
             gap: 20px;
         }
         .nft-card {
@@ -53,17 +53,15 @@
             text-align: center;
             background-color: #f9f9f9;
             border-radius: 5px;
-            height: 150px;
+            min-height: 200px; /* Increased height for text art */
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: space-between;
         }
-        .nft-placeholder {
-            width: 80px;
-            height: 80px;
+        .nft-art {
+            font-size: 12px;
+            line-height: 1;
             margin: 0 auto;
-            border: 2px dotted #0f3460;
-            border-radius: 5px;
         }
         button {
             background-color: #0f3460;
@@ -187,40 +185,35 @@
         let userBalance = 0;
         let isRegistered = false;
         let nfts = [
-            { id: 1, name: "Cosmic.Cat", price: 100 },
-            { id: 2, name: "Pixel.Punk", price: 150 },
-            { id: 3, name: "Astro.Dog", price: 120 },
-            { id: 4, name: "Neon.Fox", price: 180 },
-            { id: 5, name: "Cyber.Bird", price: 90 },
-            { id: 6, name: "Lunar.Wolf", price: 200 },
-            { id: 7, name: "Solar.Bear", price: 130 },
-            { id: 8, name: "Glitch.Deer", price: 160 },
-            { id: 9, name: "Vapor.Rat", price: 110 },
-            { id: 10, name: "Echo.Tiger", price: 170 },
-            { id: 11, name: "Frost.Lion", price: 140 },
-            { id: 12, name: "Blaze.Hawk", price: 190 },
-            { id: 13, name: "Shadow.Panther", price: 210 },
-            { id: 14, name: "Nova.Rabbit", price: 95 },
-            { id: 15, name: "Quantum.Snake", price: 155 },
-            { id: 16, name: "Prism.Eagle", price: 175 },
-            { id: 17, name: "Dusk.Owl", price: 125 },
-            { id: 18, name: "Dawn.Crow", price: 145 },
-            { id: 19, name: "Flux.Monkey", price: 165 },
-            { id: 20, name: "Glow.Zebra", price: 185 },
-            { id: 21, name: "Holo.Horse", price: 205 },
-            { id: 22, name: "Mist.Cheetah", price: 115 },
-            { id: 23, name: "Pulse.Bat", price: 135 },
-            { id: 24, name: "Spark.Lynx", price: 195 },
-            { id: 25, name: "Void.Shark", price: 220 },
+            { 
+                id: 1, 
+                name: "Cosmic.Cat", 
+                price: 100, 
+                art: `
+ /_/\  
+( o.o ) 
+ > ^ <
+                `
+            },
+            { 
+                id: 2, 
+                name: "Pixel.Punk", 
+                price: 150, 
+                art: `
+  [::]  
+  o-o  
+  /|\
+                `
+            }
         ];
 
-        // Populate NFT grid with dotted placeholders
+        // Populate NFT grid with text art
         function loadNFTs() {
             const nftGrid = document.getElementById('nft-grid');
             nfts.forEach(nft => {
                 nftGrid.innerHTML += `
                     <div class="nft-card">
-                        <div class="nft-placeholder"></div>
+                        <pre class="nft-art">${nft.art}</pre>
                         <p>${nft.name}</p>
                         <p>$${nft.price}</p>
                     </div>
@@ -303,4 +296,4 @@
         window.onload = loadNFTs;
     </script>
 </body>
-</html> 
+</html>
